@@ -88,15 +88,17 @@ function createBoard() {
 }
 
 // Handle cell clicks
+// Modify your existing JavaScript
 function handleCellClick(e) {
     if (game.gameOver) return;
     
     const row = parseInt(e.target.dataset.row);
-    const col = parseInt(e.target.dataset.col);
+    const col = parseInt(e.target.col);
     
     if (game.makeMove(row, col)) {
         updateBoard();
         if (game.gameOver) {
+            showVictoryOverlay();
             statusElement.textContent = `Player ${game.winner} wins!`;
         } else {
             statusElement.textContent = `Player ${game.currentPlayer}'s turn`;
@@ -104,23 +106,23 @@ function handleCellClick(e) {
     }
 }
 
-// Update board display
-function updateBoard() {
-    const cells = document.getElementsByClassName('cell');
-    for (let i = 0; i < game.size; i++) {
-        for (let j = 0; j < game.size; j++) {
-            const idx = i * game.size + j;
-            cells[idx].className = 'cell' + (game.board[i][j] ? ` player${game.board[i][j]}` : '');
-        }
-    }
+// Add these new functions
+function showVictoryOverlay() {
+    const overlay = document.getElementById('victoryOverlay');
+    const message = document.getElementById('victoryMessage');
+    message.textContent = `Player ${game.winner} Wins!`;
+    overlay.classList.add('active');
 }
 
-// Reset game
 function resetGame() {
     game.reset();
     updateBoard();
     statusElement.textContent = "Player 1's turn";
+    const overlay = document.getElementById('victoryOverlay');
+    overlay.classList.remove('active');
 }
+
+// Remove the original reset button styling from CSS and use the new-game-btn style
 
 // Initialize game
 createBoard();
